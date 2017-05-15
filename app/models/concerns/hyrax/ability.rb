@@ -36,32 +36,31 @@ module Hyrax
     # @return [Array<String>] a list of admin set ids for admin sets the user
     #   has deposit or manage permissions to.
     def admin_set_ids_for_deposit
-      PermissionTemplateAccess.joins(:permission_template)
-                              .where(agent_type: 'user',
-                                     agent_id: current_user.user_key,
-                                     access: ['deposit', 'manage'])
-                              .or(
-                                PermissionTemplateAccess.joins(:permission_template)
-                                                        .where(agent_type: 'group',
-                                                               agent_id: user_groups,
-                                                               access: ['deposit', 'manage'])
-                              ).pluck('DISTINCT admin_set_id')
+      admin_set_ids_for_roles(['deposit','manage'])
     end
 
+    # @return [Array<String>] a list of admin set ids for admin sets the user
+    #   has manage permissions to.
     def admin_set_ids_for_management
+      admin_set_ids_for_roles(['manage'])
+    end
+
+    # @param [Array<Symbol>] roles the roles to be used when searching for admin
+    #   sets for the user
+    # @return [Array<String>] a list of admin set ids for admin sets the user
+    #   that match the roles
+    def admin_set_ids_for_roles(roles)
       PermissionTemplateAccess.joins(:permission_template)
                               .where(agent_type: 'user',
                                      agent_id: current_user.user_key,
-                                     access: ['manage'])
+                                     access: roles)
                               .or(
                                 PermissionTemplateAccess.joins(:permission_template)
                                                         .where(agent_type: 'group',
                                                                agent_id: user_groups,
-                                                               access: ['manage'])
+                                                               access: roles)
                               ).pluck('DISTINCT admin_set_id')
     end
-
-
 
     private
 
