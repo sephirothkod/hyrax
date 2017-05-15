@@ -48,6 +48,21 @@ module Hyrax
                               ).pluck('DISTINCT admin_set_id')
     end
 
+    def admin_set_ids_for_management
+      PermissionTemplateAccess.joins(:permission_template)
+                              .where(agent_type: 'user',
+                                     agent_id: current_user.user_key,
+                                     access: ['manage'])
+                              .or(
+                                PermissionTemplateAccess.joins(:permission_template)
+                                                        .where(agent_type: 'group',
+                                                               agent_id: user_groups,
+                                                               access: ['manage'])
+                              ).pluck('DISTINCT admin_set_id')
+    end
+
+
+
     private
 
       # Add this to your ability_logic if you want all logged in users to be able
