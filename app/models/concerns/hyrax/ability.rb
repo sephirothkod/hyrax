@@ -131,7 +131,7 @@ module Hyrax
 
       def admin_set_abilities
         can :manage, [AdminSet, Hyrax::PermissionTemplate, Hyrax::PermissionTemplateAccess] if admin?
-        can :manage, AdminSet do |adminset|
+        can [:edit, :delete, :manage], AdminSet do |adminset|
           admin_set_ids_for_management.include?(adminset.id)
         end
 
@@ -175,6 +175,8 @@ module Hyrax
       end
 
       def admin_permissions
+        can :read, :admin_dashboard
+
         return unless admin?
         # TODO: deprecate this. We no longer have a dashboard just for admins
         can :read, :admin_dashboard
