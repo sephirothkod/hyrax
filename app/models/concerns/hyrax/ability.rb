@@ -36,7 +36,7 @@ module Hyrax
     # @return [Array<String>] a list of admin set ids for admin sets the user
     #   has deposit or manage permissions to.
     def admin_set_ids_for_deposit
-      admin_set_ids_for_roles(['deposit','manage'])
+      admin_set_ids_for_roles(['deposit', 'manage'])
     end
 
     # @return [Array<String>] a list of admin set ids for admin sets the user
